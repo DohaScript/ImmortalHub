@@ -514,4 +514,102 @@ AddToggle(MoveSec2, "Spinbot", CFG.Spinbot, function(v) CFG.Spinbot = v end)
 -- Themes Section
 local ThemeSec = CreateSection(ThemeTab, "Accent Color Presets", UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0))
 local colors = {
-    {"Purple",
+        {"Purple", Color3.fromRGB(124, 58, 237)},
+    {"Blue", Color3.fromRGB(59, 130, 246)},
+    {"Red", Color3.fromRGB(239, 68, 68)},
+    {"Green", Color3.fromRGB(34, 197, 94)},
+    {"Orange", Color3.fromRGB(249, 115, 22)},
+    {"Pink", Color3.fromRGB(236, 72, 153)},
+    {"Cyan", Color3.fromRGB(6, 182, 212)},
+    {"White", Color3.fromRGB(80, 85, 100)}
+}
+
+for _, item in ipairs(colors) do
+    local name, color = item[1], item[2]
+
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(1, -8, 0, 30)
+    Button.BackgroundColor3 = Color3.fromRGB(245, 246, 249)
+    Button.Text = name
+    Button.TextColor3 = Color3.fromRGB(45, 48, 58)
+    Button.Font = Enum.Font.GothamMedium
+    Button.TextSize = 11
+    Button.AutoButtonColor = false
+    Button.Parent = ThemeSec
+
+    pcall(function()
+        Instance.new("UICorner", Button).CornerRadius = UDim.new(0, 7)
+        local stroke = Instance.new("UIStroke", Button)
+        stroke.Color = Color3.fromRGB(230, 233, 240)
+        stroke.Thickness = 1
+    end)
+
+    Button.MouseButton1Click:Connect(function()
+        UpdateTheme(color)
+    end)
+end
+
+local ConfigSec = CreateSection(ConfigTab, "Configuration", UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0))
+
+local ConfigInfo = Instance.new("TextLabel")
+ConfigInfo.Size = UDim2.new(1, -16, 0, 48)
+ConfigInfo.Position = UDim2.new(0, 8, 0, 8)
+ConfigInfo.Text = "ImmortalHub configuration panel"
+ConfigInfo.TextColor3 = Color3.fromRGB(70, 74, 86)
+ConfigInfo.Font = Enum.Font.GothamMedium
+ConfigInfo.TextSize = 11
+ConfigInfo.TextWrapped = true
+ConfigInfo.BackgroundTransparency = 1
+ConfigInfo.Parent = ConfigSec
+
+local HideButton = Instance.new("TextButton")
+HideButton.Size = UDim2.new(1, -16, 0, 30)
+HideButton.BackgroundColor3 = Color3.fromRGB(245, 246, 249)
+HideButton.Text = "Hide Menu"
+HideButton.TextColor3 = Color3.fromRGB(45, 48, 58)
+HideButton.Font = Enum.Font.GothamMedium
+HideButton.TextSize = 11
+HideButton.Parent = ConfigSec
+
+pcall(function()
+    Instance.new("UICorner", HideButton).CornerRadius = UDim.new(0, 7)
+end)
+
+HideButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+end)
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 28, 0, 28)
+CloseButton.Position = UDim2.new(1, -36, 0, 10)
+CloseButton.BackgroundColor3 = Color3.fromRGB(245, 246, 249)
+CloseButton.Text = "×"
+CloseButton.TextColor3 = Color3.fromRGB(80, 84, 96)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 18
+CloseButton.AutoButtonColor = false
+CloseButton.Parent = TopHeader
+
+pcall(function()
+    Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 7)
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+end)
+
+-- Keep the UI responsive after respawn.
+LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(0.25)
+    if ScreenGui and ScreenGui.Parent == nil then
+        ScreenGui.Parent = TargetParent
+    end
+end)
+
+-- FPS display.
+RunService.RenderStepped:Connect(function(dt)
+    if dt and dt > 0 then
+        local fps = math.floor(1 / dt + 0.5)
+        WMText.Text = "ImmortalHub | Creator: DohaScript | FPS: " .. tostring(fps)
+    end
+end)
